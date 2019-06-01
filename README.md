@@ -1,7 +1,8 @@
 <img align="left" alt="SchoolSocial-2014" src="./logogrande.png" width ='150'>
 
 One of my first prject developed in 2014 as a final project for the school.
-Full documentation at: [GitHub](./SchoolSocial.pdf).
+Full documentation at: [SchoolSocial](./SchoolSocial.pdf).
+Full demo at: http://schoolsocial2014.altervista.org/
 
 <br/>
 <br/>
