@@ -1,0 +1,142 @@
+Crea database:
+
+CREATE DATABASE IF NOT EXISTS schoolsocial;
+
+Crea tabella ruoli:
+
+CREATE TABLE IF NOT EXISTS ruoli (
+	id_ruolo int(11) primary key auto_increment not null,
+        tipo char(30) 
+);
+
+Crea tabella regioni:
+
+CREATE TABLE IF NOT EXISTS regioni (
+	id_reg int(3) primary key auto_increment not null,
+        nome_regione varchar(200) not null
+);
+
+Crea tabella province:
+
+CREATE TABLE IF NOT EXISTS province (
+	id_pro int(4) primary key auto_increment not null,
+        id_reg int(3) not null,
+        nome_provincia varchar(200) not null,
+        FOREIGN KEY (id_reg) REFERENCES regioni(id_reg)
+);
+
+Crea tabella comuni:
+
+CREATE TABLE IF NOT EXISTS comuni (
+	id_com int(4) primary key auto_increment not null,
+        id_pro int(3) not null,
+        cap int(8) not null,
+        comune varchar(200) not null,
+        FOREIGN KEY (id_pro) REFERENCES province(id_pro)
+);
+
+Crea tabella scuole:
+
+CREATE TABLE IF NOT EXISTS scuole (
+	id_scuola int(11) primary key auto_increment not null,
+        nome char(30) not null,
+        telefono char(30),
+        fax char(30),
+        mail char(30),
+        sitoweb char(50),
+        via char(30),
+        regione int(11),
+        FOREIGN KEY (regione) REFERENCES regioni(id_reg),
+        provincia int(11),
+        FOREIGN KEY (provincia) REFERENCES province(id_pro),
+        comune int(11),
+        FOREIGN KEY (comune) REFERENCES comuni(id_com)
+);
+
+Crea tabella indirizzi:
+
+CREATE TABLE IF NOT EXISTS indirizzi (
+	id_indirizzo int(11) primary key auto_increment not null,
+       indirizzo char(30),
+	scuola int(11),
+	FOREIGN KEY (scuola) REFERENCES scuole(id_scuola)
+);
+
+Crea tabella sezioni:
+
+CREATE TABLE IF NOT EXISTS sezioni (
+	id_sezione int(11) primary key auto_increment not null,
+       nome_sezione char(30),
+       indirizzo int(11),
+	FOREIGN KEY (indirizzo) REFERENCES indirizzi(id_indirizzo)
+);
+
+Crea tabella classi:
+
+CREATE TABLE IF NOT EXISTS classi (
+	id_classe int(11) primary key auto_increment not null,
+       classe int(11),
+       sezione int(11) not null,
+       FOREIGN KEY (sezione) REFERENCES sezioni(id_sezione)
+);
+
+Crea tabella utenti:
+
+CREATE TABLE IF NOT EXISTS utenti (
+	id_utente int(11) primary key auto_increment not null,
+        nome char(30) not null,
+        cognome char(30) not null,
+        data_nascita date,
+        via char(30),
+        regione int(11),
+        FOREIGN KEY (regione) REFERENCES regioni(id_reg),
+        provincia int(11),
+        FOREIGN KEY (provincia) REFERENCES province(id_pro),
+        comune int(11),
+        FOREIGN KEY (comune) REFERENCES comuni(id_com),
+        mail char(30) not null,
+        password char(30) not null,
+        avatar char(30),
+        ruolo int(11),
+	ultimo_accesso datetime,
+        FOREIGN KEY (ruolo) REFERENCES ruoli(id_ruolo)
+);
+
+Crea tabella relazione tra UTENTE (Amici):
+
+CREATE TABLE IF NOT EXISTS amici (
+	id_amici int(11) primary key auto_increment not null,
+	amico_mittente int(11),
+	amico_destinatario int(11),
+	stato boolean,
+	FOREIGN KEY (amico_mittente) REFERENCES utenti(id_utente),
+	FOREIGN KEY (amico_destinatario) REFERENCES utenti(id_utente)
+);
+
+Crea tabella relazione tra UTENTE-CLASSE:
+
+CREATE TABLE IF NOT EXISTS ute_cla (
+	id_ute_cla int(11) primary key auto_increment not null,
+	utente int(11),
+	classe int(11),
+	FOREIGN KEY (utente) REFERENCES utenti(id_utente),
+	FOREIGN KEY (classe) REFERENCES classi(id_classe)
+);
+
+Crea tabella post: 
+
+CREATE TABLE IF NOT EXISTS post (
+	id_post int(11) primary key auto_increment not null,
+	data_ora datetime,
+	contenuto text not null,
+	scritto_per_utente int(11),
+	scritto_per_classe int(11),
+       	scritto_da_utente int(11) not null,
+	FOREIGN KEY (scritto_da_utente) REFERENCES utenti(id_utente),
+	FOREIGN KEY (scritto_per_utente) REFERENCES utenti(id_utente),
+	FOREIGN KEY (scritto_per_classe) REFERENCES classi(id_classe)
+);
+
+
+
+
